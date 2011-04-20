@@ -53,7 +53,9 @@ class ExceptionNotifier
       prefix   = "#{@options[:email_prefix]}#{@kontroller.controller_name}##{@kontroller.action_name}"
       subject  = "#{prefix} (#{@exception.class}) #{@exception.message.inspect}"
 
-      mail(:to => @options[:exception_recipients], :from => @options[:sender_address], :subject => subject) do |format|
+      mail_options = {:to => @options[:exception_recipients], :from => @options[:sender_address], :subject => subject}
+      mail_options.merge!(@options[:more])
+      mail(mail_options) do |format|
         format.text { render "#{mailer_name}/exception_notification" }
       end
     end
